@@ -1,7 +1,6 @@
 import { NestApplication, NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import * as dynamoose from 'dynamoose';
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './lib/global-exception.filter';
 import { GlobalLoggingInterceptor } from './lib/global-logging.interceptor';
