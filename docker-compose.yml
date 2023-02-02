@@ -1,0 +1,18 @@
+# for develop
+version: "3"
+
+services:
+  dynamodb:
+    image: amazon/dynamodb-local
+    volumes:
+      - dbstorage:/home/dynamodblocal/data
+    restart: always
+    user: root
+    hostname: ${CDK_STACK_NAME}-dynamodb
+    container_name: ${CDK_STACK_NAME}-dynamodb
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/"
+volumes:
+  dbstorage:
+    name: ${CDK_STACK_NAME}-volume
