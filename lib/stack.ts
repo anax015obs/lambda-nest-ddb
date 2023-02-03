@@ -4,6 +4,7 @@ import {
 	aws_lambda as lambda,
 	aws_dynamodb as ddb,
 	aws_iam as iam,
+	aws_certificatemanager as cert,
 	Duration,
 	Stack as CdkStack,
 	StackProps,
@@ -81,5 +82,14 @@ export class Stack extends CdkStack {
 			'SERVER_URL',
 			`https://${apigwInstance.restApiId}.execute-api.${this.region}.amazonaws.com/${process.env.APIGW_STAGE}`
 		);
+
+		if (process.env.APIGW_DOMAIN && process.env.APIGW_CERT_ARN) {
+			const domain = new apigw.DomainName(this, `${this.stackName}-domain`, {
+				domainName: process.env.APIGW_DOMAIN,
+				certificate: cert.Certificate.fromCertificateArn(this, `${this.stackName}-cert`, process.env.APIGW_CERT_ARN)
+			});
+
+			domain.addBasePathMapping(apigwInstance);
+		}
 	}
 }

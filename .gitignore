@@ -2,5 +2,6 @@
 node_modules
 dist
 env/.env.secrets
+env/.env.production
 .cdk.staging
 cdk.out
