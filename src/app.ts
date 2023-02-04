@@ -12,8 +12,9 @@ export const getApp = async () => {
 		logger
 	});
 	app.enableCors({
-		origin: process.env.NODE_ENV === 'production' ? process.env.APIGW_DOMAIN : `http://localhost:${process.env.ALLOWED_PORT}`,
-		allowedHeaders: ['Authorization']
+		origin:
+			process.env.NODE_ENV === 'production' ? `https://${process.env.ALLOWED_ORIGIN}` : `http://localhost:${process.env.ALLOWED_PORT}`,
+		credentials: true
 	});
 	app.use(
 		session({
