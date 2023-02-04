@@ -12,7 +12,7 @@ export const getApp = async () => {
 		logger
 	});
 	app.enableCors({
-		origin: '*',
+		origin: process.env.NODE_ENV === 'production' ? process.env.APIGW_DOMAIN : `http://localhost:${process.env.ALLOWED_PORT}`,
 		allowedHeaders: ['Authorization']
 	});
 	app.use(

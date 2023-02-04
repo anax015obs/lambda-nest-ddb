@@ -26,7 +26,7 @@ export class AuthController {
 	): Promise<{ url: string; statusCode: number }> {
 		this.logger.log('processing google authorizing...', userArgs);
 		const jwt = await this.authService.issueJwt(userArgs);
-		res.cookie('jwt', jwt, { httpOnly: true });
+		res.cookie('jwt', jwt, { httpOnly: true, secure: process.env.NODE_ENV === 'production' ? true : false });
 		return {
 			url: state,
 			statusCode: 302

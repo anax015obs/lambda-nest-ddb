@@ -5,6 +5,8 @@ import {
 	aws_dynamodb as ddb,
 	aws_iam as iam,
 	aws_certificatemanager as cert,
+	aws_route53 as route53,
+	aws_route53_targets as route53Targets,
 	Duration,
 	Stack as CdkStack,
 	StackProps,
@@ -78,18 +80,23 @@ export class Stack extends CdkStack {
 				// cacheClusterSize: "0.5",
 			}
 		});
-		lambdaInstance.addEnvironment(
-			'SERVER_URL',
-			`https://${apigwInstance.restApiId}.execute-api.${this.region}.amazonaws.com/${process.env.APIGW_STAGE}`
-		);
-
 		if (process.env.APIGW_DOMAIN && process.env.APIGW_CERT_ARN) {
-			const domain = new apigw.DomainName(this, `${this.stackName}-domain`, {
+			const certificate = cert.Certificate.fromCertificateArn(this, `${this.stackName}-cert`, process.env.APIGW_CERT_ARN);
+
+			apigwInstance.addDomainName(process.env.APIGW_DOMAIN, {
 				domainName: process.env.APIGW_DOMAIN,
-				certificate: cert.Certificate.fromCertificateArn(this, `${this.stackName}-cert`, process.env.APIGW_CERT_ARN)
+				certificate
 			});
 
-			domain.addBasePathMapping(apigwInstance);
+			const hostedZone = route53.HostedZone.fromLookup(this, `${this.stackName}-hostedZone`, {
+				domainName: process.env.APIGW_DOMAIN
+			});
+
+			new route53.ARecord(this, `${this.stackName}-ARecord`, {
+				recordName: process.env.APIGW_DOMAIN,
+				target: route53.RecordTarget.fromAlias(new route53Targets.ApiGateway(apigwInstance)),
+				zone: hostedZone
+			});
 		}
 	}
 }

@@ -1,6 +1,6 @@
 {
 	"secrets": ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "JWT_SECRET", "JWT_EXPIRES_IN"],
-	"local": ["DB_PORT", "SERVER_PORT"],
-	"production": ["APIGW_STAGE", "APIGW_DOMAIN"],
+	"local": ["DB_PORT", "SERVER_PORT", "ALLOWED_PORT"],
+	"production": ["APIGW_STAGE", "APIGW_DOMAIN", "APIGW_CERT_ARN"],
 	"aws": ["AWS_PROFILE", "CDK_STACK_NAME"]
 }
